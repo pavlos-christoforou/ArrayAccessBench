@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 	"time"
 )
 
 const (
-	NUM_RECORDS = 50 * 1000 * 100
+	NUM_RECORDS = 50 * 1000 * 1000
 )
 
 var (
