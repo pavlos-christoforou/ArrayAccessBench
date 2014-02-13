@@ -9,7 +9,7 @@ section '.text' executable
  extrn clock
 
 NUM_RECORDS = (50 * 1000 * 1000)
-TRADE_SIZE = 8 + 8 + 8 +4 +4 +8 +1  ;; add seven to this to get structs equivalent in layout to C's
+TRADE_SIZE = 8 + 8 + 8 +4 +4 +8 +1  ;; add seven to this to get structs equivalent in layout to C's (padded structs_
 ARRAY_BYTES = NUM_RECORDS * TRADE_SIZE
 NUM_RUNS = 5
 B = 66 ; 1000010
@@ -34,7 +34,8 @@ doRun:
 	mov	r8, rax			;store clock in r8
 	xor	rax,rax			;clear rax
 
-	mov	r11, S			;store S in r11 for later use in cmov instruction
+	xor	r11, r11
+	mov	byte	r11b, S		;store S in r11 for later use in cmov instruction
 	xor	r12, r12		;clear r12
 	mov	rcx, r15		;rcx = &(trades[0])
 	add	rcx, ARRAY_BYTES	;rcx = &(trades[NUM_RECORDS])
@@ -51,7 +52,7 @@ initTrades:
 	mov	qword	[rcx+32], rbx	;quantity = rbx
 	mov	byte	r12b, B		;r12b = B
 	and		rbx, 1		;if rbx is an even number, this will be zero
-	cmovnz		r12, r11	;if it's not zero, move S into r12
+	cmovnz		r12, r11		;if it's not zero, move S into r12
 	mov	byte	[rcx+40], r12b 	;side = r12
 	cmp	rcx, r15		;if rcx != &(trades[0]), continue looping
 	jne	initTrades
@@ -94,10 +95,15 @@ addToSellCost:				;else if (trade->Side == 'S') {
 	mov	rax, 1		
 	mov 	rdi, 1
 	lea	rsi, [printTime]
-	mov	rdx, 15		;size of printTime
-	syscall  		;print "elapsed time = "
+	mov	rdx, 9		;size of printTime
+	syscall  		;print "duration"
 	mov	rax, [rsp+16]
 	call	PRINTDEC	;print elapsed time
+	mov	rax, 1		
+	mov 	rdi, 1
+	lea	rsi, [printMs]
+	mov	rdx, 2		;size of printMs
+	syscall  		;print "ms"
 
 	mov	rax, 1		
 	mov 	rdi, 1
@@ -207,7 +213,8 @@ section '.data' writeable
 printBuy 	db	"buyCost = "
 printSell 	db	"sellCost = "
 printRun 	db	"runNum = "
-printTime 	db	"elapsed time = "
+printTime 	db	"duration "
+printMs		db	"ms"
 printNL		db	0x0A
 
 section '.bbs' writeable

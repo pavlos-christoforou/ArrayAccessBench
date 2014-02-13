@@ -39,7 +39,7 @@
           (if (equal? (rkt-mem-trade-side trade-ref) #\B)
               (set! buy-cost (+ buy-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref))))
               (set! sell-cost (+ sell-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref)))))))
-      (printf "Run ~v had duration of ~v seconds~%" run-num (- (current-inexact-milliseconds) start-t) )
+      (printf "Run ~v had duration ~v seconds~%" run-num (inexact->exact (floor (- (current-inexact-milliseconds) start-t))) )
       (printf "buycost = ~v sellCost = ~v ~%" buy-cost sell-cost))))
 
 (define (run)

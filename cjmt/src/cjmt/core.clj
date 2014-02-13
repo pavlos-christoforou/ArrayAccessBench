@@ -49,7 +49,9 @@
               (def buy-cost (+ buy-cost (* (.gprice trade-ref) (.gquantity trade-ref)))) 
               (def sell-cost (+ sell-cost (* (.gprice trade-ref) (.gquantity trade-ref))))))) 
       ;(printf "Run %d had duration of %.6f seconds\n" run-num (- (System/currentTimeMillis) start-t) )
-      (println (- (System/currentTimeMillis) start-t))
+      (printf "Run %d had duration of " run-num)
+      (print (- (System/currentTimeMillis) start-t))
+      (println "ms")
       (printf "buycost = %d sellCost = %d \n" buy-cost sell-cost))))
 
 (defn run []
