@@ -53,7 +53,7 @@ initTrades:
 	and		rbx, 1		;if rbx is an even number, this will be zero
 	cmovnz		r12, r11	;if it's not zero, move S into r12
 	mov	byte	[rcx+40], r12b 	;side = r12
-	cmp	rcx, r15		;if rcs != &(trades[0]), continue looping
+	cmp	rcx, r15		;if rcx != &(trades[0]), continue looping
 	jne	initTrades
 
 	mov 	r9,	INIT_BUY_COST	;buyCost = 0
@@ -202,23 +202,8 @@ PRINTDEC:		;Number printing routine from stack overflow; http://stackoverflow.co
 
  RET
 
-;getTime:
-
-;	call clock
-;	mov rax
-;clock_t start, end;
-;double elapsed;
-
-;start = clock();
-;... /* Do the work. */
-;end = clock();
-;elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-
-
 section '.data' writeable
 
-display_name	db	"DISPLAY",0
 printBuy 	db	"buyCost = "
 printSell 	db	"sellCost = "
 printRun 	db	"runNum = "
@@ -228,7 +213,6 @@ printNL		db	0x0A
 section '.bbs' writeable
 
 ArrayStart	rq	1
-time		rq	2
 
 LETTER		rb	1
 NUMBER		rb	23
