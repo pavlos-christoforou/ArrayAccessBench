@@ -1,7 +1,7 @@
 using System;
 
 public class MemtestS{
-    private const int NUM_RECORDS = 50 * 1000 * 100;
+    private const int NUM_RECORDS = 50 * 1000 * 444;
  
     private static CSMemoryTrade[] trades;
  

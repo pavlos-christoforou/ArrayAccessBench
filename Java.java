@@ -1,6 +1,6 @@
 public class Java
 {
-    private static final int NUM_RECORDS = 50 * 1000 * 100;
+    private static final int NUM_RECORDS = 50 * 1000 * 444;
  
     private static JavaMemoryTrade[] trades;
 

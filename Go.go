@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	NUM_RECORDS = 50 * 1000 * 1000
+	NUM_RECORDS = 50 * 1000 * 444
 )
 
 var (

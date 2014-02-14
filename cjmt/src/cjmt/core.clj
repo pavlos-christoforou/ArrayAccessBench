@@ -4,7 +4,7 @@
 (set! *warn-on-reflection* true)
 ;(set! *unchecked-math* true)
 
-(def ^:const NUM_RECORDS (* 50 1000 10))
+(def ^:const NUM_RECORDS (* 50 1000 444))
 
 (definterface IMemTest
   (^Long gtradeId []) (^Long gclientId []) (^Long gvenueId []) (^Long ginstrumentCode []) (^Long gprice []) 

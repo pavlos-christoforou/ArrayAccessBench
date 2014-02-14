@@ -5,7 +5,7 @@
 #include <time.h>
 #include <math.h>
  
-#define NUM_RECORDS (50 * 1000 * 900)
+#define NUM_RECORDS (50 * 1000 * 444)
  
 struct CMemoryTrade {
 	long TradeId; long ClientId; int VenueCode; int InstrumentCode; long Price; long Quantity; char Side;
@@ -58,7 +58,7 @@ void perfRun(int runNum) {
 	}
 	double endT = getTime();
 	double duration =  endT - startT;
-	printf("%d - duration %f ms\n", runNum, duration);
+	printf("%d - duration %d ms\n", runNum, (int)duration);
 	printf("buyCost = %ld sellCost = %ld\n", buyCost, sellCost);
 }
  

@@ -1,5 +1,5 @@
 import time
-NUM_RECORDS = 50* 1000 *100
+NUM_RECORDS = 50* 1000 *444
 
 class PyMemTrade():
     def __init__(self, tradeId, clientId, venueId, instrumentCode, price, quantity, side):

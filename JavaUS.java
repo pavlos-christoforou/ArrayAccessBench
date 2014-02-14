@@ -19,7 +19,7 @@ public class JavaUS
         }
     }
  
-    private static final int NUM_RECORDS = 50 * 1000 * 100;
+    private static final int NUM_RECORDS = 50 * 1000 * 444;
  
     private static long address;
     private static final DirectMemoryTrade flyweight = new DirectMemoryTrade();

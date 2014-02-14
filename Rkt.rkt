@@ -1,6 +1,6 @@
 #lang typed/racket
 (require racket/performance-hint)
-(define: *NUM_RECORDS* : Integer 5000000)
+(define: *NUM_RECORDS* : Integer (* 50 1000 444))
 
 
 (struct: rkt-mem-trade ([trade-id : Integer] [client-id : Integer] [venue-id : Integer]
@@ -36,10 +36,11 @@
       (init-trades)
       (for ([i (in-range 0 *NUM_RECORDS*)])
         (let ([trade-ref (vector-ref trades i)])
+;(print (rkt-mem-trade-side trade-ref))
           (if (equal? (rkt-mem-trade-side trade-ref) #\B)
               (set! buy-cost (+ buy-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref))))
               (set! sell-cost (+ sell-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref)))))))
-      (printf "Run ~v had duration ~v seconds~%" run-num (inexact->exact (floor (- (current-inexact-milliseconds) start-t))) )
+      (printf "Run ~v had duration ~v ms~%" run-num (inexact->exact (floor (- (current-inexact-milliseconds) start-t))) )
       (printf "buycost = ~v sellCost = ~v ~%" buy-cost sell-cost))))
 
 (define (run)

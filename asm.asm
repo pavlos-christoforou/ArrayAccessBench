@@ -8,7 +8,7 @@ section '.text' executable
  extrn free
  extrn clock
 
-NUM_RECORDS = (50 * 1000 * 1000)
+NUM_RECORDS = (50 * 1000 * 444)
 TRADE_SIZE = 8 + 8 + 8 +4 +4 +8 +1  ;; add seven to this to get structs equivalent in layout to C's (padded structs_
 ARRAY_BYTES = NUM_RECORDS * TRADE_SIZE
 NUM_RUNS = 5
