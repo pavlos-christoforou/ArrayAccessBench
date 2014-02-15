@@ -8,11 +8,9 @@
                                              [side : Char])
   #:mutable) 
 
+(define (make-trade i) (rkt-mem-trade 1 1 1 1 1 1 #\a))
 
-(define trades (make-vector *NUM_RECORDS* [rkt-mem-trade 1 1 1 1 1 1 #\a])) 
-
-(: pack ( (Listof Char) -> Integer))
-(define (pack vals) 2)
+(define: trades : (Vectorof rkt-mem-trade) (build-vector *NUM_RECORDS* make-trade)) 
 
 (define (init-trades)
     (for ([i (in-range 0 *NUM_RECORDS*)])
@@ -36,10 +34,9 @@
       (init-trades)
       (for ([i (in-range 0 *NUM_RECORDS*)])
         (let ([trade-ref (vector-ref trades i)])
-;(print (rkt-mem-trade-side trade-ref))
           (if (equal? (rkt-mem-trade-side trade-ref) #\B)
               (set! buy-cost (+ buy-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref))))
-              (set! sell-cost (+ sell-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref)))))))
+              (set! sell-cost (+ sell-cost (* (rkt-mem-trade-price trade-ref) (rkt-mem-trade-quantity trade-ref))))))) 
       (printf "Run ~v had duration ~v ms~%" run-num (inexact->exact (floor (- (current-inexact-milliseconds) start-t))) )
       (printf "buycost = ~v sellCost = ~v ~%" buy-cost sell-cost))))
 

@@ -1,9 +1,13 @@
 /*	Reads data from BenchmarkData.dat (five rows per language, first is name, second is compile command or "-" if interpreted, third is run command, fourth is source file name, fifth is executable name).
-	Compiles the languages, recording compile time and the size of the executable generated.
+	Modifies the number '444' in each source file, to alter the total array length.
+	Compiles the languages, recording compile time and the size of the executable generated. 
 	Runs them, recording their resident memory usage and the size.
+	Restores the original source file.
 	Waits WaitTime seconds between each run.
 	Outputs their speed, memory usage and compile time to stdout.
 	Compresses their source files and records their size.
+	Sorts the languages, removing those that didn't run correctly.
+	Calculates summary statistics.
 	Outputs all the above data to an HTML table in ResultsTable.html
 */
 
@@ -12,6 +16,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"errors"
 	"io/ioutil"
 	"os/exec"
 	"sort"
@@ -28,8 +33,8 @@ const (
 )
 
 var (
-	langs     []Lang
-	dataLines []string
+//	numTradesValuesToTest []string = []string{"10"," 50","100"}
+	numTradesValuesToTest []string = []string{"444"}
 )
 
 type Lang struct {
@@ -53,12 +58,13 @@ type Lang struct {
 	ExeSize     int
 }
 
-func loadLangs() {
+func loadLangs()[]Lang {
+	langs := make([]Lang,0,20)
 	contents, err := ioutil.ReadFile(langFile)
 	if err != nil {
 		panic(err)
 	}
-	dataLines = strings.Split(string(contents), "\n")
+	dataLines := strings.Split(string(contents), "\n")
 	for i, _ := range dataLines {
 		dataLines[i] = strings.Trim(dataLines[i], "\n\r")
 	}
@@ -66,16 +72,58 @@ func loadLangs() {
 		thisLang := Lang{Name: dataLines[i], Commands: dataLines[i+1], Run: dataLines[i+2], SourceName: dataLines[i+3], ExeName: dataLines[i+4], Loaded: true, Interpreted: dataLines[i+1] == "-"}
 		langs = append(langs, thisLang)
 	}
+	return langs
 }
 
-func compileLangs() {
+func modifyNumTrades(lang Lang, newVal string) error{
+	fmt.Printf("Now modifying numTrades for language %v.\n", lang.Name)
+	langSource, err := ioutil.ReadFile(lang.SourceName)
+	if err != nil {
+		fmt.Printf("Error loading source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to modify numTrades")
+	}
+	sourceString := string(langSource)
+	newSource := strings.Replace(sourceString, "444", newVal, 1)
+	err = ioutil.WriteFile(lang.SourceName + ".bck", langSource, 0644)
+	if err != nil {
+		fmt.Printf("Error writing backup source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to modify numTrades")
+	}
+	err = ioutil.WriteFile(lang.SourceName, []byte(newSource), 0644)
+	if err != nil {
+		fmt.Printf("Error writing new source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to modify numTrades")
+	}
+	return nil
+}
+
+func restoreNumTrades(lang Lang) error{
+	fmt.Printf("Now restoring numTrades for language %v.\n", lang.Name)
+	_, err := runCommand("cp "+ lang.SourceName + ".bck " + "lang.SourceName")
+	if err != nil {
+		fmt.Printf("Error copying original source back to restore numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to restore numTrades")
+	}
+/*	_, err = runCommand("rm "+ lang.SourceName + ".bck")
+	if err != nil {
+		fmt.Printf("Error deleting backup source after restoring numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to restore numTrades")
+	}
+*/	return nil	
+}
+
+func compileNModifyLangs(langs []Lang, newNumTradesValue string)[]Lang {
 	for i, lang := range langs {
+		err :=	modifyNumTrades(lang, newNumTradesValue)
+		if err != nil{
+			continue
+		}
 		if lang.Interpreted == true {
 			continue
 		}
 		fmt.Printf("Now compiling language %v.\n", lang.Name)
 		initT := time.Now()
-		_, err := runCommand(lang.Commands)
+		_, err = runCommand(lang.Commands)
 		if err != nil {
 			fmt.Printf("Compilation of %v failed with error of %v\n", lang.Name, err)
 			langs[i].Loaded = false
@@ -83,9 +131,10 @@ func compileLangs() {
 		endT := time.Now()
 		langs[i].CmplTime = endT.Sub(initT).Seconds()
 	}
+	return langs
 }
 
-func runLangs() {
+func runLangs(langs []Lang)[]Lang {
 	for i, lang := range langs {
 		if lang.Loaded == false {
 			continue
@@ -93,6 +142,7 @@ func runLangs() {
 		fmt.Println("Pausing to allow the system to cool down.")
 		time.Sleep(WaitTime * time.Second)
 		fmt.Printf("Now running language %v.\n", lang.Name)
+		
 		out, err := runCommand(`command time -f 'max resident:\t%M KiB' ` + lang.Run)
 		if err != nil {
 			fmt.Printf("Running %v failed with error of %v\n", lang.Name, err)
@@ -100,7 +150,7 @@ func runLangs() {
 		}
 
 		langs[i].Results = string(out)
-		
+		restoreNumTrades(lang)		
 		if lang.Interpreted == true{
 			continue
 		}
@@ -111,9 +161,10 @@ func runLangs() {
 		}
 		langs[i].ExeSize = len(resultingExecutable) / 1000
 	}
+	return langs
 }
 
-func parseResults() {
+func parseResults(langs []Lang)[]Lang {
 	for i, lang := range langs {
 		if lang.Loaded == false {
 			continue
@@ -161,9 +212,10 @@ func parseResults() {
 		}
 		fmt.Printf("The implementation in language %v compiled in %v seconds and ran at a maximum speed of %v ms, using %v KiB of heap memory.\n", lang.Name, lang.CmplTime, langs[i].BestRun, memUse)
 	}
+	return langs
 }
 
-func measureLangSizes() {
+func measureLangSizes(langs []Lang)[]Lang {
 	fmt.Println("Now measuring compressed source file sizes and source file LOCs.")
 	for i, lang := range langs {
 		if lang.Loaded == false {
@@ -199,9 +251,10 @@ func measureLangSizes() {
 		}
 		langs[i].LOC = len(sourceLines) - numEmptyLines
 	}
+	return langs
 }
 
-func calcLangStats() {
+func calcLangStats(langs []Lang)[]Lang {
 	fmt.Println("Now calculating summary statistics")
 	minTime := 100000000
 	for _, lang := range langs {
@@ -219,18 +272,26 @@ func calcLangStats() {
 		langs[i].PcntBestTime = float64(minTime/ lang.BestRun)
 		langs[i].Compiler = strings.Split(lang.Commands, " ")[0]
 	}
+	return langs
 }
 
 type BySpeed []Lang
 func (s BySpeed) Len() int           { return len(s) }
 func (s BySpeed) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s BySpeed) Less(i, j int) bool { return (1/ (s[i].BestRun) ) < (1/ (s[j].BestRun) ) }
+func (s BySpeed) Less(i, j int) bool { return (1/ (s[i].BestRun +1 ) ) < (1/ (s[j].BestRun + 1) ) }
 
-func sortLangs(){
-	sort.Sort(BySpeed(langs))
+func sortLangs(langs []Lang)[]Lang{
+	doneLangs := make([]Lang,0,len(langs))
+	for _, lang := range langs{
+		if lang.Loaded && lang.BestRun != 0{
+			doneLangs = append(doneLangs, lang)
+		}
+	}
+	sort.Sort(BySpeed(doneLangs))
+	return doneLangs
 }
 
-func putResultsInHtmlTable() {
+func putResultsInHtmlTable(langs []Lang, numTrades string, tableString *string) {
 	tmpl, err := template.New("row").Parse(`
 		<tr>
 		<td style="text-align: center;" width="81" height="17"><span style="color: #000000;"><em>{{.Name}}</em></span></td>
@@ -245,6 +306,10 @@ func putResultsInHtmlTable() {
 		<td style="text-align: center;" width="70"><span style="color: #000000;"><em>{{.ExeSize}}</em></span></td>
 		</tr>
 	`)
+	if err != nil{
+		fmt.Println("Error parsing html table template; modify the source!")
+		return
+	}
 	table := `
 		<table width="394" border="1" cellspacing="1" cellpadding="1">
 		<colgroup>
@@ -265,7 +330,6 @@ func putResultsInHtmlTable() {
 			<td style="text-align: center;" width="70"><span style="color: #000000;"><em>Executable size (KB)</em></span></td>
 			</tr>
 	`
-	sortLangs()
 	for _, lang := range langs {
 		if lang.Loaded == false {
 			continue
@@ -274,15 +338,12 @@ func putResultsInHtmlTable() {
 		err = tmpl.Execute(&execResults, lang)
 		table += execResults.String()
 	}
-
-	table = table + `
+	table = "<b>NumTrades = " + numTrades + "</b><br>" +  
+		table + `
 		</tbody>
-		</table>`
-
-	err = ioutil.WriteFile("ResultsTable.html", []byte(table), 0644)
-	if err != nil {
-		fmt.Printf("Failed to write results to HTML table, failing with error %v\n", err)
-	}
+		</table>
+		<br>`
+	*tableString += table
 }
 
 func runCommand(command string) (string, error) {
@@ -301,11 +362,13 @@ func runCommand(command string) (string, error) {
 }
 
 func main() {
-	loadLangs()
-	compileLangs()
-	runLangs()
-	parseResults()
-	measureLangSizes()
-	calcLangStats()
-	putResultsInHtmlTable()
+	htmlTables := ""
+	for _, numTradesValue := range numTradesValuesToTest{
+		putResultsInHtmlTable(calcLangStats(sortLangs(measureLangSizes(parseResults(runLangs(compileNModifyLangs(loadLangs(),numTradesValue)))))),numTradesValue,&htmlTables)
+	}
+	err := ioutil.WriteFile("ResultsTable.html", []byte(htmlTables), 0644)
+	if err != nil {
+		fmt.Printf("Failed to write results to HTML table, failing with error %v\n", err)
+	}
+
 }
