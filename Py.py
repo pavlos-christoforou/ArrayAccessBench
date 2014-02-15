@@ -1,5 +1,5 @@
 import time
-NUM_RECORDS = 50* 1000 *444
+NUM_RECORDS = 50* 1000 * 444
 
 class PyMemTrade():
     def __init__(self, tradeId, clientId, venueId, instrumentCode, price, quantity, side):
@@ -34,7 +34,7 @@ def perfRun(runNum, trades):
  	
 	end = time.time() * 1000
 	duration = end - start
-	print(str(runNum) + " - duration " + str(duration) + "ms\n")
+	print(str(runNum) + " - duration " + str(int(duration)) + "ms\n")
 	#print(runNum, " - duration ", duration, "ms\n") 		This prints weird on Pypy
 	print("buyCost = ", buyCost, " sellCost = ", sellCost, "\n")
 

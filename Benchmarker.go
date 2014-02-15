@@ -29,11 +29,12 @@ import (
 
 const (
 	langFile  = "BenchmarkData.dat"
-	WaitTime  = 20
+	WaitTime  = 2
 )
 
 var (
-	numTradesValuesToTest []string = []string{"10"," 50","100"}
+//	numTradesValuesToTest []string = []string{"10"," 50","100"}
+	numTradesValuesToTest []string = []string{"10"}
 )
 
 type Lang struct {
@@ -78,7 +79,7 @@ func modifyNumTrades(lang Lang, newVal string) error{
 	fmt.Printf("Now modifying numTrades for language %v.\n", lang.Name)
 	_, err := runCommand("cp "+ lang.SourceName + " " + lang.SourceName + ".bck")
 	if err != nil {
-		fmt.Printf("Error copying original source to make backup befor modifying numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		fmt.Printf("Error copying original source to make backup before modifying numTrades for lang %v; failed with error of %v\n", lang.Name, err)
 		return errors.New("Failed to restore numTrades")
 	}
 	langSource, err := ioutil.ReadFile(lang.SourceName)
@@ -141,8 +142,11 @@ func runLangs(langs []Lang)[]Lang {
 		fmt.Println("Pausing to allow the system to cool down.")
 		time.Sleep(WaitTime * time.Second)
 		fmt.Printf("Now running language %v.\n", lang.Name)
-		
-		out, err := runCommand(`command time -f 'max resident:\t%M KiB' ` + lang.Run)
+		prefix := ""
+		if lang.Name == "Clojure"{
+			prefix = "cd cjmt && "
+		}
+		out, err := runCommand(prefix + `command time -f 'max resident:\t%M KiB' ` + lang.Run)
 		if err != nil {
 			fmt.Printf("Running %v failed with error of %v\n", lang.Name, err)
 			langs[i].Loaded = false
@@ -277,7 +281,7 @@ func calcLangStats(langs []Lang)[]Lang {
 type BySpeed []Lang
 func (s BySpeed) Len() int           { return len(s) }
 func (s BySpeed) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s BySpeed) Less(i, j int) bool { return (1/ (s[i].BestRun +1 ) ) < (1/ (s[j].BestRun + 1) ) }
+func (s BySpeed) Less(i, j int) bool { return s[i].BestRun < s[j].BestRun }
 
 func sortLangs(langs []Lang)[]Lang{
 	doneLangs := make([]Lang,0,len(langs))
