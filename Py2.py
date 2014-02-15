@@ -1,5 +1,5 @@
 import time
-NUM_RECORDS = 50* 1000 * 10
+NUM_RECORDS = 50* 1000 * 444
 
 class PyMemTrade():
     def __init__(self, tradeId, clientId, venueId, instrumentCode, price, quantity, side):
@@ -13,12 +13,16 @@ class PyMemTrade():
 
 def initTrades(trades):
 	for i in range(0, NUM_RECORDS):
-		aside = ''
+		trades[i].tradeId = i
+		trades[i].clientId = 1
+		trades[i].venueId = 123
+		trades[i].instrumentCode = 321
+		trades[i].price = i
+		trades[i].quantity = i
 		if (i % 2 == 0):
-			aside = 'B'
+			trades[i].side = 'B'
 		else:
-			aside = 'S'
-		trades[i] = PyMemTrade(i,1,123,321,i,i,aside)
+			trades[i].side = 'S'
 
 def perfRun(runNum, trades):
 	start = time.time() * 1000
@@ -26,11 +30,10 @@ def perfRun(runNum, trades):
 	buyCost = 0
 	sellCost = 0
 	for i in range(0, NUM_RECORDS):
-		trade = trades[i]
-		if (trade.side == 'B'):
-                	buyCost += trade.price * trade.quantity
+		if (trades[i].side == 'B'):
+                	buyCost += trades[i].price * trades[i].quantity
 		else:
-                	sellCost += trade.price * trade.quantity      
+                	sellCost += trades[i].price * trades[i].quantity      
  	
 	end = time.time() * 1000
 	duration = end - start

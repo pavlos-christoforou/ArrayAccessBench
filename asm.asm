@@ -71,7 +71,7 @@ countCosts:
 	mul	qword	[rcx + 32] 	; multiply price by quantity, storing result in RDX
 	mov	byte	r12b, [rcx+40] 	; store side in r12
 
-	and	r12, 1			;if r12 is B, this is zero, else if it is S, this is one
+	and	r12, 1			;if r12 is B, this is zero, else if it is S, this is one	
 	jnz	addToSellCost		;if (trade->Side == 'B') {
 	add	r9, rdx			;buyCost += trade->Price * trade->Quantity;
 	xor	rdx, rdx		;clear rdx

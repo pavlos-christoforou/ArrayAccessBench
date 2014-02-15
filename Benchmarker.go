@@ -28,13 +28,13 @@ import (
 )
 
 const (
-	langFile  = "BenchmarkData.dat"
-	WaitTime  = 2
+	langFile  = "BenchmarkData2.dat"
+	outputFile = "ResultsTable2.html"
+	WaitTime  = 10
 )
 
 var (
-//	numTradesValuesToTest []string = []string{"10"," 50","100"}
-	numTradesValuesToTest []string = []string{"10"}
+	numTradesValuesToTest []string = []string{"70"}
 )
 
 type Lang struct {
@@ -367,9 +367,10 @@ func runCommand(command string) (string, error) {
 func main() {
 	htmlTables := ""
 	for _, numTradesValue := range numTradesValuesToTest{
+		fmt.Printf("Now commencing run with NumTrades value of %v\n",numTradesValue)
 		putResultsInHtmlTable(calcLangStats(sortLangs(measureLangSizes(parseResults(runLangs(compileNModifyLangs(loadLangs(),numTradesValue)))))),numTradesValue,&htmlTables)
 	}
-	err := ioutil.WriteFile("ResultsTable.html", []byte(htmlTables), 0644)
+	err := ioutil.WriteFile(outputFile, []byte(htmlTables), 0644)
 	if err != nil {
 		fmt.Printf("Failed to write results to HTML table, failing with error %v\n", err)
 	}
