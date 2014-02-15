@@ -29,12 +29,11 @@ import (
 
 const (
 	langFile  = "BenchmarkData.dat"
-	WaitTime  = 1
+	WaitTime  = 20
 )
 
 var (
-//	numTradesValuesToTest []string = []string{"10"," 50","100"}
-	numTradesValuesToTest []string = []string{"444"}
+	numTradesValuesToTest []string = []string{"10"," 50","100"}
 )
 
 type Lang struct {
@@ -77,6 +76,11 @@ func loadLangs()[]Lang {
 
 func modifyNumTrades(lang Lang, newVal string) error{
 	fmt.Printf("Now modifying numTrades for language %v.\n", lang.Name)
+	_, err := runCommand("cp "+ lang.SourceName + " " + lang.SourceName + ".bck")
+	if err != nil {
+		fmt.Printf("Error copying original source to make backup befor modifying numTrades for lang %v; failed with error of %v\n", lang.Name, err)
+		return errors.New("Failed to restore numTrades")
+	}
 	langSource, err := ioutil.ReadFile(lang.SourceName)
 	if err != nil {
 		fmt.Printf("Error loading source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
@@ -84,11 +88,6 @@ func modifyNumTrades(lang Lang, newVal string) error{
 	}
 	sourceString := string(langSource)
 	newSource := strings.Replace(sourceString, "444", newVal, 1)
-	err = ioutil.WriteFile(lang.SourceName + ".bck", langSource, 0644)
-	if err != nil {
-		fmt.Printf("Error writing backup source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
-		return errors.New("Failed to modify numTrades")
-	}
 	err = ioutil.WriteFile(lang.SourceName, []byte(newSource), 0644)
 	if err != nil {
 		fmt.Printf("Error writing new source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
@@ -99,17 +98,17 @@ func modifyNumTrades(lang Lang, newVal string) error{
 
 func restoreNumTrades(lang Lang) error{
 	fmt.Printf("Now restoring numTrades for language %v.\n", lang.Name)
-	_, err := runCommand("cp "+ lang.SourceName + ".bck " + "lang.SourceName")
+	_, err := runCommand("cp "+ lang.SourceName + ".bck " + lang.SourceName)
 	if err != nil {
 		fmt.Printf("Error copying original source back to restore numTrades for lang %v; failed with error of %v\n", lang.Name, err)
 		return errors.New("Failed to restore numTrades")
 	}
-/*	_, err = runCommand("rm "+ lang.SourceName + ".bck")
+	_, err = runCommand("rm "+ lang.SourceName + ".bck")
 	if err != nil {
 		fmt.Printf("Error deleting backup source after restoring numTrades for lang %v; failed with error of %v\n", lang.Name, err)
 		return errors.New("Failed to restore numTrades")
 	}
-*/	return nil	
+	return nil	
 }
 
 func compileNModifyLangs(langs []Lang, newNumTradesValue string)[]Lang {
@@ -269,7 +268,7 @@ func calcLangStats(langs []Lang)[]Lang {
 		if lang.Loaded == false {
 			continue
 		}
-		langs[i].PcntBestTime = float64(minTime/ lang.BestRun)
+		langs[i].PcntBestTime = float64(minTime)/ float64(lang.BestRun) * 100
 		langs[i].Compiler = strings.Split(lang.Commands, " ")[0]
 	}
 	return langs
@@ -320,8 +319,8 @@ func putResultsInHtmlTable(langs []Lang, numTrades string, tableString *string) 
 			<tr>
 			<td style="text-align: center;" width="81" height="17"><span style="color: #000000;"><em>Language</em></span></td>
 			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Compiler</em></span></td>
-			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Compile Time</em></span></td>
-			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Running time</em></span></td>
+			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Compile time (s)</em></span></td>
+			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Running time (ms</em></span></td>
 			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>% Fastest</em></span></td>
 			<td style="text-align: center;" width="70"><span style="color: #000000;"><em>Resident mem use (KiB)</em></span></td>
 			<td style="text-align: center;" width="70"><span style="color: #000000;"><em>Compressed source size</em></span></td>

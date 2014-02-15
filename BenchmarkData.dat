@@ -8,3 +8,43 @@ go build Go.go
 ./Go
 Go.go
 Go
+C#
+mcs CS.cs
+mono CS.exe
+CS.cs
+CS.exe
+Java
+javac ./Java.java
+java Java
+Java.java
+Java.class
+Racket
+raco exe Rkt.rkt
+./Rkt
+Rkt.rkt
+Rkt
+Common Lisp
+-
+sbcl --load Lisp.lisp --non-interactive --eval "(mt:run)"
+Lisp.lisp
+-
+Clojure
+-
+lein run
+core.clj
+-
+x86-64 assembly
+fasm asm.asm & gcc asm.o -o asm
+./asm
+asm.asm
+asm
+Python3
+-
+python3 Py.py
+Py.py
+-
+Python2 (Pypy)
+-
+pypy Py.py
+Py.py
+-
