@@ -28,13 +28,13 @@ import (
 )
 
 const (
-	langFile  = "BenchmarkData2.dat"
-	outputFile = "ResultsTable2.html"
+	langFile  = "BenchmarkData.dat"
+	outputFile = "ResultsTable.html"
 	WaitTime  = 10
 )
 
 var (
-	numTradesValuesToTest []string = []string{"70"}
+	numTradesValuesToTest []string = []string{"10","100"}
 )
 
 type Lang struct {
