@@ -58,3 +58,8 @@ Smalltalk (GNU)
 gst ST.st
 ST.st
 -
+Lua
+-
+luajit L.lua
+L.lua
+-

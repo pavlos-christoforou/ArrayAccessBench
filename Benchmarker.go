@@ -34,7 +34,7 @@ const (
 )
 
 var (
-	numTradesValuesToTest []string = []string{"10","100"}
+	numTradesValuesToTest []string = []string{"10", "50", "100", "150"}
 )
 
 type Lang struct {
@@ -324,7 +324,7 @@ func putResultsInHtmlTable(langs []Lang, numTrades string, tableString *string) 
 			<td style="text-align: center;" width="81" height="17"><span style="color: #000000;"><em>Language</em></span></td>
 			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Compiler</em></span></td>
 			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Compile time (s)</em></span></td>
-			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Running time (ms</em></span></td>
+			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>Running time (ms)</em></span></td>
 			<td style="text-align: center;" width="81"><span style="color: #000000;"><em>% Fastest</em></span></td>
 			<td style="text-align: center;" width="70"><span style="color: #000000;"><em>Resident mem use (KiB)</em></span></td>
 			<td style="text-align: center;" width="70"><span style="color: #000000;"><em>Compressed source size</em></span></td>
