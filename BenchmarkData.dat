@@ -58,8 +58,18 @@ Smalltalk (GNU)
 gst ST.st
 ST.st
 -
-Lua
+F#
+fsharpc FS.fs
+mono FS.exe
+FS.fs
+FS.exe
+LuaJit
 -
 luajit L.lua
+LJ.lua
+-
+Lua
+-
+lua L.lua
 L.lua
 -

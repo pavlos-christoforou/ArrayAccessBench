@@ -30,11 +30,11 @@ import (
 const (
 	langFile  = "BenchmarkData.dat"
 	outputFile = "ResultsTable.html"
-	WaitTime  = 10
+	WaitTime  = 5
 )
 
 var (
-	numTradesValuesToTest []string = []string{"10", "50", "100", "150"}
+	numTradesValuesToTest []string = []string{ "10", "70"}
 )
 
 type Lang struct {
@@ -76,7 +76,7 @@ func loadLangs()[]Lang {
 }
 
 func modifyNumTrades(lang Lang, newVal string) error{
-	fmt.Printf("Now modifying numTrades for language %v.\n", lang.Name)
+	fmt.Printf("Now modifying numTrades for language %v; first making backup.\n", lang.Name)
 	_, err := runCommand("cp "+ lang.SourceName + " " + lang.SourceName + ".bck")
 	if err != nil {
 		fmt.Printf("Error copying original source to make backup before modifying numTrades for lang %v; failed with error of %v\n", lang.Name, err)
