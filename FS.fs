@@ -14,7 +14,8 @@ let prepareArray =
     for i in 0 .. (NUM_RECORDS - 1) do
       Array.set trades i {TradeId = (int64 0); ClientId = (int64 0); VenueId = (int32 0); InstrumentCode = (int32 0); Price = (int64 0); Quantity = (int64 0); Side = 'a'}
 
-let initTrades =
+let initTrades n =
+  printfn "initiating trades"
   for i in 0 .. (NUM_RECORDS - 1) do
     trades.[i].TradeId <- (int64 i)
     trades.[i].ClientId <- (int64 1)
@@ -28,7 +29,7 @@ let perfRun n =
   let startT = System.DateTime.Now.Ticks / System.TimeSpan.TicksPerMillisecond
   let mutable buyCost = (int64 0)
   let mutable sellCost = (int64 0)
-  initTrades
+  let dummy = initTrades 42
   for i in 0 .. (NUM_RECORDS - 1) do
     if (trades.[i].Side = 'B') then buyCost <- trades.[i].Price * trades.[i].Quantity else sellCost <- trades.[i].Price * trades.[i].Quantity 
   let endT = System.DateTime.Now.Ticks / System.TimeSpan.TicksPerMillisecond
