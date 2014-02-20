@@ -10,7 +10,11 @@
 (defparameter *NUM_RECORDS* (* 50 1000 444))
 
 (defstruct lisp-memory-trade (trade-id 0) (client-id 0) (venue-code 0) (instrument-code 0) (price 0) (quantity 0) (side #\x))
-(defvar trades (make-array *NUM_RECORDS* :initial-element (make-lisp-memory-trade) :element-type 'lisp-memory-trade) )
+(defvar trades (make-array *NUM_RECORDS* :element-type 'lisp-memory-trade) )
+
+(defun prep-trades ()
+  (dotimes (i *NUM_RECORDS*)
+    (setf (aref trades i) (make-lisp-memory-trade) )))
 
 (defun init-trades ()
           (dotimes (i *NUM_RECORDS*)
@@ -35,10 +39,11 @@
       (dotimes (i *NUM_RECORDS*)
          (let ((trade-ref (aref trades i)))
            (if (equal (lisp-memory-trade-side trade-ref) #\B)
-              (setf buy-cost (+ buy-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))
-              (setf sell-cost (+ sell-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref)))))))
+              (setf buy-cost (+ buy-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))   
+              (setf sell-cost (+ sell-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))))) 
       (format t "~d duration ~d ms~%" run-num (- (get-internal-run-time) start-t) )
       (format t "buycost = ~d sellCost = ~d~%" buy-cost sell-cost))))
 
 (defun run ()
+  (prep-trades)
   (time(loop for i from 0 to 5 do (perf-run i))))
