@@ -2,7 +2,7 @@
   (:gen-class))
 
 (set! *warn-on-reflection* true)
-;(set! *unchecked-math* true)
+(set! *unchecked-math* true)
 
 (def ^:const NUM_RECORDS (* 50 1000 444))
 
@@ -46,8 +46,8 @@
       (dotimes [i NUM_RECORDS]
         (let [trade-ref ^CJMemTest (aget ^"[Ljava.lang.Object;" trades i)]
           (if (= (.gside trade-ref) \B)
-              (def buy-cost (+ buy-cost (* (.gprice trade-ref) (.gquantity trade-ref)))) 
-              (def sell-cost (+ sell-cost (* (.gprice trade-ref) (.gquantity trade-ref))))))) 
+              (def buy-cost (+' buy-cost (* (.gprice trade-ref) (.gquantity trade-ref)))) 
+              (def sell-cost (+' sell-cost (* (.gprice trade-ref) (.gquantity trade-ref))))))) 
       ;(printf "Run %d had duration %.6f seconds\n" run-num (- (System/currentTimeMillis) start-t) )
       (printf "Run %d had duration " run-num)
       (print (- (System/currentTimeMillis) start-t))

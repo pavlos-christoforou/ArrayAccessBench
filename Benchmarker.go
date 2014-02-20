@@ -1,4 +1,5 @@
 /*	Reads data from BenchmarkData.dat (five rows per language, first is name, second is compile command or "-" if interpreted, third is run command, fourth is source file name, fifth is executable name).
+	Creates backups of the source file of each language, or loads it from the backup if a backup already exists.
 	Modifies the number '444' in each source file, to alter the total array length.
 	Compiles the languages, recording compile time and the size of the executable generated. 
 	Runs them, recording their resident memory usage and the size.
@@ -9,6 +10,7 @@
 	Sorts the languages, removing those that didn't run correctly.
 	Calculates summary statistics.
 	Outputs all the above data to an HTML table in ResultsTable.html
+	Deletes the backups.
 */
 
 package main
@@ -30,11 +32,11 @@ import (
 const (
 	langFile  = "BenchmarkData.dat"
 	outputFile = "ResultsTable.html"
-	WaitTime  = 5
+	WaitTime  = 1
 )
 
 var (
-	numTradesValuesToTest []string = []string{ "10", "70"}
+	numTradesValuesToTest []string = []string{"10", "50", "100"}
 )
 
 type Lang struct {
@@ -75,13 +77,9 @@ func loadLangs()[]Lang {
 	return langs
 }
 
+
 func modifyNumTrades(lang Lang, newVal string) error{
-	fmt.Printf("Now modifying numTrades for language %v; first making backup.\n", lang.Name)
-	_, err := runCommand("cp "+ lang.SourceName + " " + lang.SourceName + ".bck")
-	if err != nil {
-		fmt.Printf("Error copying original source to make backup before modifying numTrades for lang %v; failed with error of %v\n", lang.Name, err)
-		return errors.New("Failed to restore numTrades")
-	}
+	fmt.Printf("Now modifying numTrades for language %v.\n", lang.Name)
 	langSource, err := ioutil.ReadFile(lang.SourceName)
 	if err != nil {
 		fmt.Printf("Error loading source to modify numTrades for lang %v; failed with error of %v\n", lang.Name, err)
@@ -104,16 +102,42 @@ func restoreNumTrades(lang Lang) error{
 		fmt.Printf("Error copying original source back to restore numTrades for lang %v; failed with error of %v\n", lang.Name, err)
 		return errors.New("Failed to restore numTrades")
 	}
-	_, err = runCommand("rm "+ lang.SourceName + ".bck")
-	if err != nil {
-		fmt.Printf("Error deleting backup source after restoring numTrades for lang %v; failed with error of %v\n", lang.Name, err)
-		return errors.New("Failed to restore numTrades")
-	}
 	return nil	
 }
 
-func compileNModifyLangs(langs []Lang, newNumTradesValue string)[]Lang {
+func deleteLangBackups(langs []Lang){
+	for _, lang := range langs{
+		_, err := runCommand("rm "+ lang.SourceName + ".bck")
+		if err != nil {
+			fmt.Printf("Error deleting backup source for lang %v; failed with error of %v\n", lang.Name, err)
+		}
+	}
+}
+
+func backupLangs(langs []Lang) []Lang{
+	fmt.Println("Now backing up language sources.")
 	for i, lang := range langs {
+		_, doesntAlreadyExist := ioutil.ReadFile(lang.SourceName + ".bck")
+		if (doesntAlreadyExist == nil){
+			fmt.Printf("Backup already exists for language %v; loading that.\n", lang.Name)
+			restoreNumTrades(lang)
+			continue
+		}
+		_, err := runCommand("cp "+ lang.SourceName + " " + lang.SourceName + ".bck")
+		if err != nil {
+			fmt.Printf("Error copying original source to make backup before for lang %v; failed with error of %v\n", lang.Name, err)
+			langs[i].Loaded = false
+		}	
+	}
+	return langs
+}
+
+func compileNModifyLangs(langs []Lang, newNumTradesValue string)[]Lang {
+	langs = backupLangs(langs)	
+	for i, lang := range langs {
+		if lang.Loaded == false {
+			continue
+		}
 		err :=	modifyNumTrades(lang, newNumTradesValue)
 		if err != nil{
 			continue
@@ -347,6 +371,7 @@ func putResultsInHtmlTable(langs []Lang, numTrades string, tableString *string) 
 		</table>
 		<br>`
 	*tableString += table
+	deleteLangBackups(langs)
 }
 
 func runCommand(command string) (string, error) {

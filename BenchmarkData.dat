@@ -73,3 +73,8 @@ Lua
 lua L.lua
 L.lua
 -
+Julia
+-
+julia Julia.jl
+Julia.jl
+-

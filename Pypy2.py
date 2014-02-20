@@ -12,7 +12,7 @@ class PyMemTrade():
         self.side = side
 
 def initTrades(trades):
-	for i in range(0, NUM_RECORDS):
+	for i in xrange(0, NUM_RECORDS):
 		trades[i].tradeId = i
 		trades[i].clientId = 1
 		trades[i].venueId = 123
@@ -29,7 +29,7 @@ def perfRun(runNum, trades):
 	initTrades(trades)
 	buyCost = 0
 	sellCost = 0
-	for i in range(0, NUM_RECORDS):
+	for i in xrange(0, NUM_RECORDS):
 		if (trades[i].side == 'B'):
                 	buyCost += trades[i].price * trades[i].quantity
 		else:
