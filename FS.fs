@@ -17,13 +17,15 @@ let prepareArray =
 let initTrades() =
   printfn "initiating trades"
   for i in 0 .. (NUM_RECORDS - 1) do
-    trades.[i].TradeId <- (int64 i)
-    trades.[i].ClientId <- (int64 1)
-    trades.[i].VenueId <- 123
-    trades.[i].InstrumentCode <- 321
-    trades.[i].Price <- (int64 i)
-    trades.[i].Quantity <- (int64 i)
-    trades.[i].Side <- if (i%2 = 0) then 'S' else 'B'
+    let trade = {
+      TradeId = (int64 i); 
+      ClientId = (int64 1); 
+      VenueId = (int32 123); 
+      InstrumentCode = (int32 321);
+      Price = (int64 i); 
+      Quantity = (int64 i); 
+      Side = if (i%2 = 0) then 'S' else 'B'}
+    Array.set trades i trade
 
 let perfRun n =
   let startT = System.DateTime.Now.Ticks / System.TimeSpan.TicksPerMillisecond

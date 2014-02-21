@@ -7,17 +7,20 @@
 (in-package #:mem-test)
 (export '(run))
 
-(defparameter *NUM_RECORDS* (* 50 1000 444))
+(defconstant +NUM_RECORDS+ (* 50 1000 444))
 
 (defstruct lisp-memory-trade (trade-id 0) (client-id 0) (venue-code 0) (instrument-code 0) (price 0) (quantity 0) (side #\x))
-(defvar trades (make-array *NUM_RECORDS* :element-type 'lisp-memory-trade) )
+(declaim (vector trades))
+(defvar trades (make-array +NUM_RECORDS+ :element-type 'lisp-memory-trade) )
+
 
 (defun prep-trades ()
-  (dotimes (i *NUM_RECORDS*)
+  (dotimes (i +NUM_RECORDS+)
     (setf (aref trades i) (make-lisp-memory-trade) )))
 
+
 (defun init-trades ()
-          (dotimes (i *NUM_RECORDS*)
+          (dotimes (i +NUM_RECORDS+)
             (let ((trade-ref (aref trades i)))
               (progn (setf (lisp-memory-trade-trade-id trade-ref) i)
                      (setf (lisp-memory-trade-client-id trade-ref) 1)
@@ -34,9 +37,11 @@
     (start-t (get-internal-run-time))
     (buy-cost 0)
     (sell-cost 0))
+      (declare (type fixnum buy-cost))
+      (declare (type fixnum sell-cost))
       (progn
       (init-trades)
-      (dotimes (i *NUM_RECORDS*)
+      (dotimes (i +NUM_RECORDS+)
          (let ((trade-ref (aref trades i)))
            (if (equal (lisp-memory-trade-side trade-ref) #\B)
               (setf buy-cost (+ buy-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))   

@@ -32,11 +32,11 @@ import (
 const (
 	langFile  = "BenchmarkData.dat"
 	outputFile = "ResultsTable.html"
-	WaitTime  = 1
+	WaitTime  = 30
 )
 
 var (
-	numTradesValuesToTest []string = []string{"10", "50", "100"}
+	numTradesValuesToTest []string = []string{"10", "50", "100", "150"}
 )
 
 type Lang struct {
@@ -399,5 +399,4 @@ func main() {
 	if err != nil {
 		fmt.Printf("Failed to write results to HTML table, failing with error %v\n", err)
 	}
-
 }

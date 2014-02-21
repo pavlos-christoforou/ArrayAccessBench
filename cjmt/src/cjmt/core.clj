@@ -52,7 +52,7 @@
       (printf "Run %d had duration " run-num)
       (print (- (System/currentTimeMillis) start-t))
       (println "ms")
-      (printf "buycost = %d sellCost = %d \n" buy-cost sell-cost))))
+      (printf "buycost = %d sellCost = %d \n" (biginteger buy-cost) (biginteger sell-cost) ))))
 
 (defn run []
   (dotimes [i NUM_RECORDS] (aset ^"[Ljava.lang.Object;" trades i (CJMemTest. 1 1 1 1 1 1 \a)))
