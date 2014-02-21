@@ -1,0 +1,75 @@
+C3
+clang C3.c -std=c99 -O3 -o C3 -lgmp
+./C3
+C3.c
+C3
+Go3
+go build Go3.go
+./Go3
+Go3.go
+Go3
+C#3
+mcs CS3.cs /reference:System.Numerics
+mono CS3.exe
+CS3.cs
+CS3.exe
+Java3
+javac ./Java3.java
+java Java3
+Java3.java
+Java3.class
+F#3
+fsharpc FS3.fs /reference:System.Numerics
+mono FS3.exe
+FS3.fs
+FS3.exe
+Common Lisp
+-
+sbcl --load Lisp.lisp --non-interactive --eval "(mt:run)"
+Lisp.lisp
+-
+Racket
+raco exe Rkt.rkt
+./Rkt
+Rkt.rkt
+Rkt
+Clojure
+-
+lein run
+./cjmt/src/cjmt/core.clj
+-
+Python3
+-
+python3 Py.py
+Py.py
+-
+Python2 (Pypy)
+-
+pypy Pypy.py
+Pypy.py
+-
+Smalltalk (GNU)
+-
+gst ST.st
+ST.st
+-
+LuaJit
+-
+luajit L.lua
+LJ.lua
+-
+Lua
+-
+lua L.lua
+L.lua
+-
+Julia
+-
+julia Julia.jl
+Julia.jl
+-
+Ruby
+-
+ruby Ruby.rb
+Ruby.rb
+-

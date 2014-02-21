@@ -32,11 +32,12 @@ import (
 const (
 	langFile  = "BenchmarkData.dat"
 	outputFile = "ResultsTable.html"
-	WaitTime  = 30
+	WaitTime  = 10
 )
 
 var (
 	numTradesValuesToTest []string = []string{"10", "50", "100", "150"}
+//	numTradesValuesToTest []string = []string{"150", "500"}
 )
 
 type Lang struct {

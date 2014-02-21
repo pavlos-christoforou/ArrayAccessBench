@@ -18,11 +18,11 @@ javac ./Java2.java
 java Java2
 Java2.java
 Java2.class
-JavaUnSafe
-javac ./JavaUS.java
-java JavaUS
-JavaUS.java
-JavaUS.class
+F#2
+fsharpc FS2.fs
+mono FS2.exe
+FS2.fs
+FS2.exe
 Racket2
 raco exe Rkt2.rkt
 ./Rkt2
@@ -47,4 +47,84 @@ Python2 (Pypy)2
 -
 pypy Pypy2.py
 Pypy2.py
+-
+C
+clang C.c -std=c99 -O3 -o C
+./C
+C.c
+C
+Go
+go build Go.go
+./Go
+Go.go
+Go
+C#
+mcs CS.cs
+mono CS.exe
+CS.cs
+CS.exe
+Java
+javac ./Java.java
+java Java
+Java.java
+Java.class
+JavaUnSafe
+javac ./JavaUS.java
+java JavaUS
+JavaUS.java
+JavaUS.class
+Racket
+raco exe Rkt.rkt
+./Rkt
+Rkt.rkt
+Rkt
+Common Lisp
+-
+sbcl --load Lisp.lisp --non-interactive --eval "(mt:run)"
+Lisp.lisp
+-
+Clojure
+-
+lein run
+./cjmt/src/cjmt/core.clj
+-
+Python3
+-
+python3 Py.py
+Py.py
+-
+Python2 (Pypy)
+-
+pypy Pypy.py
+Pypy.py
+-
+Smalltalk (GNU)
+-
+gst ST.st
+ST.st
+-
+F#
+fsharpc FS.fs
+mono FS.exe
+FS.fs
+FS.exe
+LuaJit
+-
+luajit L.lua
+LJ.lua
+-
+Lua
+-
+lua L.lua
+L.lua
+-
+Julia
+-
+julia Julia.jl
+Julia.jl
+-
+Ruby
+-
+ruby Ruby.rb
+Ruby.rb
 -
