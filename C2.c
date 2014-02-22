@@ -34,7 +34,7 @@ void initTrades() {
  
 double getTime(){
 	struct timespec spec;
-	clock_gettime(CLOCK_REALTIME, &spec);	
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &spec);	
 	double s  = spec.tv_sec;
 	double ms = spec.tv_nsec;
 	return (s*1000 + ms / 1000000);
