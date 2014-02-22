@@ -1,6 +1,9 @@
 NUM_RECORDS = 50 * 1000 * 444
 
 class RubyMemTrade
+   attr_accessor :price 
+   attr_accessor :quantity 
+   attr_accessor :side
    def initialize(tId, cId, vCode, iCode, price, quantity, side)
       @tradeId=tId
       @clientId=cId
@@ -45,10 +48,10 @@ def perfRun(runNum)
 	buyCost = 0
 	sellCost = 0
 	for i in 0..NUM_RECORDS
-		if $trades[i].instance_variable_get("@side") == 'B'
-			buyCost += $trades[i].instance_variable_get("@price") * $trades[i].instance_variable_get("@quantity")
+		if $trades[i].side == 'B'
+			buyCost += $trades[i].price * $trades[i].quantity
 		else
-			sellCost += $trades[i].instance_variable_get("@price") * $trades[i].instance_variable_get("@quantity")
+			sellCost += $trades[i].price * $trades[i].quantity
 		end
 	end
 	endT = Time.now()
