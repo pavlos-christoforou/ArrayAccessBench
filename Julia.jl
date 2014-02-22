@@ -10,14 +10,8 @@ type JuliaMemTrade
 	side::Char
 end
 
-trades = Array(JuliaMemTrade,NUM_RECORDS)
-
-for i in 1:NUM_RECORDS
-	trades[i] = JuliaMemTrade(0,0,0,0,0,0,'a')
-end
-
-function initTrades()
-	for i in 1:NUM_RECORDS
+function initTrades(trades)           
+	@inbounds for i in 1:NUM_RECORDS
 		trades[i].tradeId = i
 		trades[i].clientId = 1
 		trades[i].venueCode = int32(123)
@@ -34,12 +28,13 @@ function initTrades()
 	end
 end
 
-function perfRun(runNum)
+function perfRun(trades, runNum)
 	startT = time()
-	initTrades()
-	buyCost::Int64 = 0
+	initTrades(trades)
+        buyCost::Int64 = 0
 	sellCost::Int64 = 0
-	for i in 1:NUM_RECORDS
+       
+	@inbounds for i in 1:NUM_RECORDS
 		if trades[i].side == 'B'
 			buyCost += trades[i].price * trades[i].quantity
 		else
@@ -52,6 +47,16 @@ function perfRun(runNum)
 	@printf "buyCost = %d sellCost = %d\n" buyCost sellCost
 end
 
-for i in 1:5
-	perfRun(i)
+function main()
+        trades = Array(JuliaMemTrade,NUM_RECORDS)
+
+        for i in 1:NUM_RECORDS
+	        trades[i] = JuliaMemTrade(0,0,0,0,0,0,'a')
+        end
+
+        for i in 1:5
+       	        perfRun(trades, i)
+        end
 end
+
+main()
