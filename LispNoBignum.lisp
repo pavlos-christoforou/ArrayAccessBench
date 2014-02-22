@@ -9,8 +9,8 @@
 
 (defconstant +NUM_RECORDS+ (* 50 1000 444))
 
-(defstruct lisp-memory-trade (trade-id 0) (client-id 0) (venue-code 0) (instrument-code 0) (price 0) (quantity 0) (side #\x))
-(declaim (vector trades))
+(defstruct lisp-memory-trade (trade-id 0) (client-id 0) (venue-code 0) (instrument-code 0) (price 0 :type fixnum) (quantity 0 :type fixnum) (side #\x))
+(declaim ((simple-array lisp-memory-trade *) trades))
 (defvar trades (make-array +NUM_RECORDS+ :element-type 'lisp-memory-trade) )
 
 
@@ -44,8 +44,8 @@
       (dotimes (i +NUM_RECORDS+)
          (let ((trade-ref (aref trades i)))
            (if (equal (lisp-memory-trade-side trade-ref) #\B)
-              (setf buy-cost (+ buy-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))   
-              (setf sell-cost (+ sell-cost (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))))) 
+              (incf buy-cost (the fixnum (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref))))
+              (incf sell-cost (the fixnum (* (lisp-memory-trade-price trade-ref) (lisp-memory-trade-quantity trade-ref)))))))
       (format t "~d duration ~d ms~%" run-num (- (get-internal-run-time) start-t) )
       (format t "buycost = ~d sellCost = ~d~%" buy-cost sell-cost))))
 
