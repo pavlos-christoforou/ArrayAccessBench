@@ -1,9 +1,8 @@
 NUM_RECORDS = 50 * 1000 * 444
 
 class RubyMemTrade
-   attr_accessor :price 
-   attr_accessor :quantity 
-   attr_accessor :side
+   attr_reader :tId, :cId, :vCode, :iCode, :price, :quantity, :side
+
    def initialize(tId, cId, vCode, iCode, price, quantity, side)
       @tradeId=tId
       @clientId=cId
@@ -38,10 +37,6 @@ def initTrades()
 	end
 end
 
-for i in 0..10000
-	print($trades[i].instance_variable_get("@side"))
-end
-
 def perfRun(runNum)
 	startT = Time.now()
 	initTrades()
@@ -66,3 +61,4 @@ if __FILE__ == $0
 		perfRun(i)
 	end
 end
+
