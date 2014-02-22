@@ -40,5 +40,5 @@ let perfRun n =
 
 let main =
   prepareArray
-  for i in 0 .. 5 do
+  for i in 0 .. 4 do
     perfRun i
