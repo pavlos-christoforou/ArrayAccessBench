@@ -13,6 +13,11 @@ mcs CS3.cs /reference:System.Numerics
 mono CS3.exe
 CS3.cs
 CS3.exe
+JuliaBigNum
+-
+julia JuliaBigNum.jl
+JuliaBigNum.jl
+-
 Java3
 javac ./Java3.java
 java Java3
