@@ -83,3 +83,7 @@ Ruby
 ruby Ruby.rb
 Ruby.rb
 -
+Tcl
+-
+tclsh bench.tcl
+bench.tcl
