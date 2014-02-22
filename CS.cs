@@ -7,6 +7,7 @@ public class MemtestS{
  
     static void Main(){
         for (int i = 0; i < 5; i++){
+	    GC.Collect();
             perfRun(i);
         }
     }
