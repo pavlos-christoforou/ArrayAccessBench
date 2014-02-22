@@ -26,14 +26,14 @@ def prepareTrades(trades)
 end
 
 def initTrades(trades)
-	NUM_RECORDS.times { |i| trades[i].fromI(i) }
+  NUM_RECORDS.times { |i| trades[i].fromI(i) }
 end
 
 def perfRun(trades, runNum)
   GC.disable
-	startT = Time.now()
-	initTrades(trades)
-	buyCost = sellCost = 0
+  startT = Time.now()
+  initTrades(trades)
+  buyCost = sellCost = 0
   trades.each do | trade | 
     if trade.side == :B 
       buyCost += trade.price * trade.quantity
@@ -42,19 +42,19 @@ def perfRun(trades, runNum)
     end
   end
 
-	endT = Time.now()
-	duration = (endT - startT) * 1000
-	printf("%d - duration %d ms\n", runNum, duration)
-	printf("buyCost = %d sellCost = %d\n", buyCost, sellCost)
+  endT = Time.now()
+  duration = (endT - startT) * 1000
+  printf("%d - duration %d ms\n", runNum, duration)
+  printf("buyCost = %d sellCost = %d\n", buyCost, sellCost)
   GC.enable
   GC.start
 end
 
 if __FILE__ == $0
   trades = []
-	prepareTrades(trades)
-	for i in 0..5
-		perfRun(trades, i)
-	end
+  prepareTrades(trades)
+for i in 0..5
+    perfRun(trades, i)
+  end
 end
 
