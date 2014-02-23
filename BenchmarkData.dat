@@ -65,7 +65,7 @@ FS.fs
 FS.exe
 LuaJit
 -
-luajit L.lua
+luajit LJ.lua
 LJ.lua
 -
 Lua

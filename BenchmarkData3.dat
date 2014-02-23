@@ -60,7 +60,7 @@ ST.st
 -
 LuaJit
 -
-luajit L.lua
+luajit LJ.lua
 LJ.lua
 -
 Lua
