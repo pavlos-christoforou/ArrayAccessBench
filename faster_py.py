@@ -23,11 +23,11 @@ def perfRun(runNum, trades):
             buyCost += trade["price"] * trade["quantity"]
         else:
             sellCost += trade["price"] * trade["quantity"]
-    print (runNum, "- duration" , ((time.time() * 1000) - start), "ms")
+    print (runNum, "- duration" , int((time.time() * 1000) - start), "ms")
     print ("buyCost = ", buyCost, " sellCost = ", sellCost)
 
 if __name__ == '__main__':
-    NUM_RECORDS = 50 * 1000 * 10
+    NUM_RECORDS = 50 * 1000 * 444
     PyMemTrade = {"tradeId": 0, "clientId": 0, "venueId": 0, 
                   "instrumentCode": 0, "price": 0, "quantity": 0, "side": "0"}
     trades = [PyMemTrade.copy() for i in range(NUM_RECORDS)]
