@@ -2,14 +2,14 @@
 /*
 Run with -J-Xmx2g option to increase heapsize
 */
-class ScalaMemTrade(tId: Int, cId: Int, vCode: Int, iCode: Int, iPrice: BigInt, iQuantity: BigInt, sSide: Char) {
+class ScalaMemTrade(tId: Int, cId: Int, vCode: Int, iCode: Int, iPrice: Long, iQuantity: Long, sSide: Char) {
 
       var tradeId: Int =tId
       var clientId: Int =cId
       var venueCode: Int =vCode
       var instrumentCode: Int =iCode
-      var price: BigInt =iPrice
-      var quantity: BigInt =iQuantity
+      var price: Long =iPrice
+      var quantity: Long =iQuantity
       var side: Char =sSide
 
    def fromI(i: Int) = {
@@ -24,7 +24,7 @@ class ScalaMemTrade(tId: Int, cId: Int, vCode: Int, iCode: Int, iPrice: BigInt, 
 }
 
 object ScalaTrade {
-  val NUM_RECORDS: Int =  1 * 1000 * 444;
+  val NUM_RECORDS: Int =  50 * 1000 * 444;
 
   val trades: Array[ScalaMemTrade] = new Array[ScalaMemTrade](NUM_RECORDS);
 
