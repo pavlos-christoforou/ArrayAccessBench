@@ -1,7 +1,10 @@
-NUM_RECORDS = 50 * 1000 * 444
-trades = {}
+local NUM_RECORDS = 50 * 1000 * 444
 
-LuaMemTrade = {}
+local setmetatable = setmetatable
+
+local trades = {}
+
+local LuaMemTrade = {}
 LuaMemTrade.__index = LuaMemTrade
 
 function LuaMemTrade.create()
@@ -28,21 +31,21 @@ function LuaMemTrade:withI(i)
 end
 
 for i = 1, NUM_RECORDS do
-	table.insert(trades, LuaMemTrade.create())
+	trades[#trades+1] = LuaMemTrade.create()
 end
 
-function initTrades()
+local function initTrades()
 	for i = 1, NUM_RECORDS do
 		trades[i]:withI(i)
 	end
 end
 
-function perfRun(runNum)
+local function perfRun(runNum)
 	startT = os.clock()
 	initTrades()
 
-	buyCost = 0
-	sellCost = 0
+	local buyCost = 0
+	local sellCost = 0
 
 	for i = 1, NUM_RECORDS do
 		if trades[i].side == 'B' 
@@ -52,8 +55,8 @@ function perfRun(runNum)
 	end
 	endT = os.clock()
 	duration = (endT - startT) * 1000
-	print(runNum .. " - duration " .. duration .. "ms\n")
-	print("buycost = " .. buyCost .. "sellCost = " .. sellCost .. "\n")
+	io.stdout:write(runNum .. " - duration " .. duration .. "ms\n")
+	io.stdout:write("buyCost = " .. buyCost .. " sellCost = " .. sellCost .. "\n")
 end
 
 for i = 1, 5 do
