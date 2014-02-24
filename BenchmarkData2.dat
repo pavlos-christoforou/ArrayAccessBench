@@ -84,8 +84,8 @@ sbcl --load Lisp.lisp --non-interactive --eval "(mt:run)"
 Lisp.lisp
 -
 Clojure
--
-lein run
+cd cjmt && lein uberjar
+java -cp target/cjmt-0.1.0-SNAPSHOT-standalone.jar cjmt.core
 ./cjmt/src/cjmt/core.clj
 -
 Python3
