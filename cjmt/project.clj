@@ -5,5 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]]
   :main cjmt.core
-  :jvm-opts ["-Xmx1g" "-server"]
+  :aot :all
+  :jvm-opts ^:replace ["-server" "-Xmx2g"]
   :target-path "target/%s")
